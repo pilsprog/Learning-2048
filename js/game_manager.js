@@ -10,6 +10,9 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("restart", this.restart.bind(this));
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
 
+  var gm = this;
+  setInterval(function() { step(gm) }, 500);
+
   this.setup();
 }
 
@@ -53,7 +56,6 @@ GameManager.prototype.setup = function () {
     // Add the initial tiles
     this.addStartTiles();
   }
-
   // Update the actuator
   this.actuate();
 };
@@ -84,6 +86,8 @@ GameManager.prototype.actuate = function () {
   // Clear the state when the game is over (game over only, not win)
   if (this.over) {
     this.storageManager.clearGameState();
+      this.score = 0;
+    this.restart();
   } else {
     this.storageManager.setGameState(this.serialize());
   }
